@@ -5,19 +5,20 @@ import (
 	"net/http"
 
 	"github.com/RedHatInsights/chrome-service-backend/rest/util"
+	"github.com/osbuild/community-gateway/oidc-authorizer/pkg/identity"
 	"github.com/sirupsen/logrus"
 )
 
 func ParseHeaders(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		header := r.Header.Get(util.XRHIDENTITY)
+		header := r.Header.Get(identity.FedoraIDHeader)
 		logrus.Infof("Header: %s", header)
 		ctx := r.Context()
 		if header == "" {
 			errString := "Missing authentication"
 			w.WriteHeader(http.StatusForbidden)
 			w.Write([]byte(errString))
-			logrus.Errorf("missing the %s header", util.XRHIDENTITY)
+			logrus.Errorf("missing the %s header", identity.FedoraIDHeader)
 			return
 		} else {
 			identity, err := util.ParseXRHIdentityHeader(header)

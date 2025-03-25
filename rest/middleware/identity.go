@@ -12,7 +12,7 @@ import (
 
 func InjectUser(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fid, ok := r.Context().Value(fedora_identity.IDHeaderKey).(*fedora_identity.Identity)
+		fid, ok := r.Context().Value(util.IDENTITY_CTX_KEY).(*fedora_identity.Identity)
 		if !ok || fid == nil {
 			http.Error(w, "Fedora Identity missing in request", http.StatusUnauthorized)
 			return
